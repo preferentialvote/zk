@@ -1,0 +1,48 @@
+// dashboard.js
+const apiEndpoint = '/results'; // Substitua com o endpoint da API real
+
+async function fetchResults() {
+  try {
+    const response = await fetch(apiEndpoint, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro HTTP ${response.status}`);
+    }
+
+    const results = await response.json();
+    return results;
+  } catch (error) {
+    console.error('Erro ao buscar resultados:', error);
+    return []; // Retorna um array vazio para evitar erros adicionais
+  }
+}
+
+const resultsTableBody = document.getElementById('resultsTableBody');
+
+async function populateResults() {
+  const results = await fetchResults();
+
+  if (resultsTableBody) {
+    resultsTableBody.innerHTML = ''; // Limpa as linhas existentes
+
+    results.forEach((result) => {
+      const row = resultsTableBody.insertRow();
+      const nameCell = row.insertCell();
+      const votesCell = row.insertCell();
+
+      nameCell.textContent = result.name;
+      votesCell.textContent = result.votes.toString();
+    });
+  } else {
+    console.error('Elemento resultsTableBody não encontrado.');
+  }
+}
+
+// Popula a tabela inicialmente e atualiza a cada 5 segundos
+populateResults();
+setInterval(populateResults, 5000);

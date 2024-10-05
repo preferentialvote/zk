@@ -1,0 +1,63 @@
+// voting.js
+const votingForm = document.getElementById('votingForm');
+const firstChoiceSelect = document.getElementById('firstChoice');
+const secondChoiceSelect = document.getElementById('secondChoice');
+const confirmationScreen = document.getElementById('confirmationScreen');
+const summaryScreen = document.getElementById('summaryScreen');
+const confirmationFirstChoice = document.getElementById('confirmationFirstChoice');
+const confirmationSecondChoice = document.getElementById('confirmationSecondChoice');
+const summaryChoices = document.getElementById('summaryChoices');
+
+let selectedFirstChoice = null;
+let selectedSecondChoice = null;
+
+function populateChoices() {
+  // Adicione opções às selects de primeira e segunda escolha
+  const candidates = [
+    { name: 'Candidato A', affiliation: 'Partido 1' },
+    { name: 'Candidato B', affiliation: 'Partido 2' },
+    { name: 'Candidato C', affiliation: 'Partido 3' },
+  ];
+
+  candidates.forEach((candidate) => {
+    const option1 = document.createElement('option');
+    option1.value = candidate.name;
+    option1.textContent = `${candidate.name} (${candidate.affiliation})`;
+    firstChoiceSelect.appendChild(option1);
+
+    const option2 = document.createElement('option');
+    option2.value = candidate.name;
+    option2.textContent = `${candidate.name} (${candidate.affiliation})`;
+    secondChoiceSelect.appendChild(option2);
+  });
+}
+
+votingForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  selectedFirstChoice = firstChoiceSelect.value;
+  selectedSecondChoice = secondChoiceSelect.value;
+
+  confirmationFirstChoice.textContent = selectedFirstChoice;
+  confirmationSecondChoice.textContent = selectedSecondChoice;
+
+  votingForm.style.display = 'none';
+  confirmationScreen.style.display = 'block';
+});
+
+document.getElementById('confirmVote').addEventListener('click', () => {
+  summaryChoices.textContent = `Presidente: ${selectedFirstChoice}, ${selectedSecondChoice}`;
+  confirmationScreen.style.display = 'none';
+  summaryScreen.style.display = 'block';
+});
+
+document.getElementById('correctVote').addEventListener('click', () => {
+  confirmationScreen.style.display = 'none';
+  votingForm.style.display = 'block';
+});
+
+document.getElementById('finalConfirm').addEventListener('click', () => {
+  alert('Voto confirmado!');
+  // Adicione lógica para enviar o voto para o backend
+});
+
+populateChoices();
